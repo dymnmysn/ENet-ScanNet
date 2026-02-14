@@ -127,8 +127,15 @@ class ScanNet(data.Dataset):
 			else:
 				raise RuntimeError('Unexpected dataset mode. Supported modes are: train, val, test, inference')
 
-			rgbd, label = self.loader(data_path, depth_path, label_path, self.color_mean, self.color_std, \
-				self.seg_classes)
+			try:
+			    rgbd, label = self.loader(
+			        data_path, depth_path, label_path,
+			        self.color_mean, self.color_std, self.seg_classes
+			    )
+			except Exception as e:
+			    print(f"[WARNING] Skipping corrupted depth sample idx={index} | {data_path} | {e}")
+			    return self.__getitem__((index + 1) % self.length)
+
 			if self.transform is not None:
 			    rgbd = self.transform(rgbd)
 			
@@ -151,7 +158,15 @@ class ScanNet(data.Dataset):
 			else:
 				raise RuntimeError('Unexpected dataset mode. Supported modes are: train, val, test')
 
-			img, label = self.loader(data_path, label_path, self.color_mean, self.color_std, self.seg_classes)
+			try:
+			    img, label = self.loader(
+			        data_path, label_path,
+			        self.color_mean, self.color_std, self.seg_classes
+			    )
+			except Exception as e:
+			    print(f"[WARNING] Skipping corrupted rgb sample idx={index} | {data_path} | {e}")
+			    return self.__getitem__((index + 1) % self.length)
+				
 			if self.transform is not None:
 			    img = self.transform(img)
 			
