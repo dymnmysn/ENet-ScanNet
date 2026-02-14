@@ -120,6 +120,11 @@ class ScanNet(data.Dataset):
 
 			rgbd, label = self.loader(data_path, depth_path, label_path, self.color_mean, self.color_std, \
 				self.seg_classes)
+			if self.transform is not None:
+			    rgbd = self.transform(rgbd)
+			
+			if self.label_transform is not None:
+			    label = self.label_transform(label)
 
 			if self.mode.lower() == 'inference':
 				return rgbd, label, data_path, depth_path, label_path
@@ -138,6 +143,11 @@ class ScanNet(data.Dataset):
 				raise RuntimeError('Unexpected dataset mode. Supported modes are: train, val, test')
 
 			img, label = self.loader(data_path, label_path, self.color_mean, self.color_std, self.seg_classes)
+			if self.transform is not None:
+			    img = self.transform(img)
+			
+			if self.label_transform is not None:
+			    label = self.label_transform(label)
 
 			if self.mode.lower() == 'inference':
 				return img, label, data_path, label_path
