@@ -4,6 +4,14 @@ import torch.utils.data as data
 from . import utils
 
 
+import torchvision.transforms as T
+
+default_img_transform = T.Compose([
+    T.ToTensor(),                      # HWC -> CHW
+    T.Normalize(mean=[0.485,0.456,0.406],
+                std=[0.229,0.224,0.225])
+])
+
 class ScanNet(data.Dataset):
 	"""ScanNet dataset http://www.scan-net.org/
 
@@ -23,7 +31,7 @@ class ScanNet(data.Dataset):
 	- seg_classes (``string``): The palette of classes that the network should learn.
 	"""
 
-	def __init__(self, root_dir, scene_file, mode='train', transform=None, label_transform = None, \
+	def __init__(self, root_dir, scene_file, mode='train', transform=default_img_transform, label_transform = None, \
 		loader=utils.scannet_loader, color_mean=[0.,0.,0.], color_std=[1.,1.,1.], load_depth=False, \
 		seg_classes='nyu40'):
 		
