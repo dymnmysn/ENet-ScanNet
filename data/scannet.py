@@ -5,11 +5,12 @@ from . import utils
 
 
 import torchvision.transforms as T
-
+color_mean = [0.496342, 0.466664, 0.440796] 
+color_std = [0.277856, 0.286230, 0.291129]
 default_img_transform = T.Compose([
     T.ToTensor(),                      # HWC -> CHW
-    T.Normalize(mean=[0.485,0.456,0.406],
-                std=[0.229,0.224,0.225])
+    T.Normalize(mean=color_mean,
+                std=color_std)
 ])
 
 class ScanNet(data.Dataset):
